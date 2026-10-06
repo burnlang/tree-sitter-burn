@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  grammar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: burnlang/burn
+          path: burn
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install -g tree-sitter-cli@0.25.10
+      - name: Generated parser is up to date
+        run: |
+          tree-sitter generate --abi 14
+          git diff --exit-code -- src
+      - run: tree-sitter test
+      - name: Every Burn file in burnlang/burn parses
+        run: |
+          git -C burn ls-files '*.bn' ':!tests/errors' | sed "s#^#$GITHUB_WORKSPACE/burn/#" > "$RUNNER_TEMP/files.txt"
+          tree-sitter parse -q --paths "$RUNNER_TEMP/files.txt"

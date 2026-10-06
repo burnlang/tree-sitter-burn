@@ -14,7 +14,7 @@
     "license": "GPL-3.0-only",
     "description": "Burn grammar for tree-sitter",
     "links": {
-      "repository": "https://github.com/burnlang/burn"
+      "repository": "https://github.com/burnlang/tree-sitter-burn"
     }
   }
 }
