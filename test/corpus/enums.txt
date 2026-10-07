@@ -1,0 +1,41 @@
+================================================================================
+Enums with data and variant types
+================================================================================
+
+def enum Shape {
+    Circle(radius: float),
+    Dot
+}
+
+Shape.Circle c = Shape.Circle(1.0) as Shape.Circle
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (definition
+    (definition_kind)
+    name: (type_identifier)
+    body: (enum_body
+      (enum_variant
+        (identifier)
+        fields: (parameters
+          (parameter
+            name: (identifier)
+            type: (type_identifier))))
+      (enum_variant
+        (identifier))))
+  (typed_declaration
+    type: (qualified_type
+      enum: (type_identifier)
+      variant: (type_identifier))
+    name: (identifier)
+    value: (cast_expression
+      (call_expression
+        function: (member_expression
+          object: (identifier)
+          property: (property_identifier))
+        arguments: (arguments
+          (number)))
+      (qualified_type
+        enum: (type_identifier)
+        variant: (type_identifier)))))

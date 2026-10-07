@@ -1360,8 +1360,29 @@
       }
     },
     "enum_variant": {
-      "type": "SYMBOL",
-      "name": "identifier"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "fields",
+              "content": {
+                "type": "SYMBOL",
+                "name": "parameters"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
     },
     "_type": {
       "type": "CHOICE",
@@ -1369,6 +1390,10 @@
         {
           "type": "SYMBOL",
           "name": "_type_name"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "qualified_type"
         },
         {
           "type": "SYMBOL",
@@ -1413,6 +1438,31 @@
       },
       "named": false,
       "value": "type_identifier"
+    },
+    "qualified_type": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "enum",
+          "content": {
+            "type": "SYMBOL",
+            "name": "type_identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        },
+        {
+          "type": "FIELD",
+          "name": "variant",
+          "content": {
+            "type": "SYMBOL",
+            "name": "type_identifier"
+          }
+        }
+      ]
     },
     "generic_type": {
       "type": "PREC",
@@ -4144,10 +4194,6 @@
   ],
   "conflicts": [
     [
-      "object_method",
-      "_expression"
-    ],
-    [
       "map_literal",
       "match_expression"
     ],
@@ -4171,6 +4217,19 @@
     ],
     [
       "_type_name",
+      "_expression"
+    ],
+    [
+      "_type_name",
+      "type_identifier"
+    ],
+    [
+      "type_identifier",
+      "_expression"
+    ],
+    [
+      "type_identifier",
+      "object_method",
       "_expression"
     ],
     [
