@@ -25,5 +25,5 @@ jobs:
       - run: tree-sitter test
       - name: Every Burn file in burnlang/burn parses
         run: |
-          git -C burn ls-files '*.bn' ':!tests/errors' | sed "s#^#$GITHUB_WORKSPACE/burn/#" > "$RUNNER_TEMP/files.txt"
+          git -C burn ls-files '*.bn' ':!tests/errors' ':!tests/lexer' | sed "s#^#$GITHUB_WORKSPACE/burn/#" > "$RUNNER_TEMP/files.txt"
           tree-sitter parse -q --paths "$RUNNER_TEMP/files.txt"

@@ -29,7 +29,6 @@ module.exports = grammar({
   word: ($) => $.identifier,
 
   conflicts: ($) => [
-    [$.object_method, $._expression],
     [$.map_literal, $.match_expression],
     [$._record_definition],
     [$._struct_definition],
@@ -37,6 +36,9 @@ module.exports = grammar({
     [$.parameters, $.function_type],
     [$.modifier, $.lambda],
     [$._type_name, $._expression],
+    [$._type_name, $.type_identifier],
+    [$.type_identifier, $._expression],
+    [$.type_identifier, $.object_method, $._expression],
     [$.block, $.map_literal],
   ],
 
@@ -148,11 +150,12 @@ module.exports = grammar({
       seq(alias('enum', $.definition_kind), field('name', $.type_identifier), field('body', $.enum_body)),
 
     enum_body: ($) => prec.dynamic(3, seq('{', sepBy(optional(choice(',', ';')), $.enum_variant), '}')),
-    enum_variant: ($) => $.identifier,
+    enum_variant: ($) => seq($.identifier, optional(field('fields', $.parameters))),
 
-    _type: ($) => choice($._type_name, $.generic_type, $.array_type, $.map_type, $.optional_type, $.function_type, $.parenthesized_type),
+    _type: ($) => choice($._type_name, $.qualified_type, $.generic_type, $.array_type, $.map_type, $.optional_type, $.function_type, $.parenthesized_type),
     _type_name: ($) => alias($.identifier, $.type_identifier),
     type_identifier: ($) => alias($.identifier, 'type_identifier'),
+    qualified_type: ($) => seq(field('enum', $.type_identifier), '.', field('variant', $.type_identifier)),
     generic_type: ($) => prec(1, seq($._type_name, '<', commaSep($._type), '>')),
     array_type: ($) => seq('[', $._type, ']'),
     map_type: ($) => seq('{', $._type, ':', $._type, '}'),
