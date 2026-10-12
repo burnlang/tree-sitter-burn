@@ -5,7 +5,8 @@ queries. The [Zed extension](https://github.com/burnlang/zed-burn) uses it, and 
 Helix and other tree-sitter editors can too.
 
 It covers the whole language: `def` definitions with modifiers and annotations, functions in both parameter styles,
-generics, `match`, string templates, closures, `is`/`as` casts and the null-safe operators.
+generics, `match`, string templates, closures, `is`/`as` casts, the null-safe operators, `unsafe` blocks and
+functions, and `asm` blocks, whose sections are parsed as raw code with `{name}` operands.
 
 ## Development
 

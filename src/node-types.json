@@ -110,6 +110,10 @@
         "named": true
       },
       {
+        "type": "asm_block",
+        "named": true
+      },
+      {
         "type": "block",
         "named": true
       },
@@ -139,6 +143,10 @@
       },
       {
         "type": "typed_declaration",
+        "named": true
+      },
+      {
+        "type": "unsafe_block",
         "named": true
       },
       {
@@ -252,6 +260,90 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "asm_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "asm_fallback",
+          "named": true
+        },
+        {
+          "type": "asm_section",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "asm_code",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "asm_code",
+          "named": true
+        },
+        {
+          "type": "asm_operand",
+          "named": true
+        },
+        {
+          "type": "asm_text",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "asm_fallback",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "asm_section",
+    "named": true,
+    "fields": {
+      "code": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "asm_code",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -643,7 +735,7 @@
         ]
       },
       "parent": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -2226,6 +2318,22 @@
     }
   },
   {
+    "type": "unsafe_block",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "block",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "variable_declaration",
     "named": true,
     "fields": {
@@ -2546,6 +2654,18 @@
     "named": false
   },
   {
+    "type": "asm",
+    "named": false
+  },
+  {
+    "type": "asm_operand",
+    "named": true
+  },
+  {
+    "type": "asm_text",
+    "named": true
+  },
+  {
     "type": "async",
     "named": false
   },
@@ -2673,6 +2793,10 @@
   },
   {
     "type": "type_identifier",
+    "named": false
+  },
+  {
+    "type": "unsafe",
     "named": false
   },
   {
