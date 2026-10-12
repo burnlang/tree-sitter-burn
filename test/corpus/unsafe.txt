@@ -1,0 +1,110 @@
+================================================================================
+Unsafe blocks and functions
+================================================================================
+
+unsafe fun raw(n: int): int {
+  return n
+}
+
+unsafe {
+  raw(1)
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (modifier)
+    (identifier)
+    (parameters
+      (parameter
+        (identifier)
+        (type_identifier)))
+    (type_identifier)
+    (block
+      (return_statement
+        (identifier))))
+  (unsafe_block
+    (block
+      (call_expression
+        (identifier)
+        (arguments
+          (number))))))
+
+================================================================================
+Inline assembly with operands, nested braces and a fallback
+================================================================================
+
+unsafe {
+  asm {
+    x86_64 {
+      mov rax, {a}
+      add {r}, rax
+    }
+    js {
+      if (x) { {r} = 1; }
+    }
+    else {
+      r = a
+    }
+  }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (unsafe_block
+    (block
+      (asm_block
+        (asm_section
+          (identifier)
+          (asm_code
+            (asm_text)
+            (asm_operand)
+            (asm_text)
+            (asm_operand)
+            (asm_text)))
+        (asm_section
+          (identifier)
+          (asm_code
+            (asm_text)
+            (asm_code
+              (asm_operand)
+              (asm_text))))
+        (asm_fallback
+          (block
+            (assignment_expression
+              (identifier)
+              (identifier))))))))
+
+================================================================================
+Nested block comments, aliases and several parents
+================================================================================
+
+/** Reads a `/** ... */` comment. */
+def alias Id = int
+
+def struct C : Base(1), Other(2) :: Named, Shape(1) {}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (block_comment)
+  (definition
+    (definition_kind)
+    (type_identifier)
+    (type_identifier))
+  (definition
+    (definition_kind)
+    (type_identifier)
+    (type_identifier)
+    (arguments
+      (number))
+    (type_identifier)
+    (arguments
+      (number))
+    (type_identifier)
+    (type_identifier)
+    (arguments
+      (number))
+    (struct_body)))

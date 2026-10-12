@@ -50,13 +50,13 @@ module.exports = grammar({
     _item: ($) => choice($.import_declaration, $.function_declaration, $.definition, $._statement),
 
     line_comment: (_) => token(seq('//', /[^\n]*/)),
-    block_comment: (_) => token(seq('/*', /[^*]*\*+([^/*][^*]*\*+)*/, '/')),
+    block_comment: (_) => token(/\/\*([^*/]|\*+[^*/]|\/+[^*/]|\/\*([^*]|\*+[^*/])*\*+\/)*\*+\//),
 
     import_declaration: ($) => seq('import', choice($.string, seq('(', repeat(seq($.string, optional(','))), ')'))),
 
     annotation: ($) => prec.right(seq('@', field('name', $.identifier), optional($.arguments))),
 
-    modifier: (_) => choice('pub', 'priv', 'async', 'static', 'abstract'),
+    modifier: (_) => choice('pub', 'priv', 'async', 'static', 'abstract', 'unsafe'),
     _modifiers: ($) => repeat1($.modifier),
     _annotations: ($) => repeat1($.annotation),
 
@@ -102,10 +102,14 @@ module.exports = grammar({
         field('name', $.type_identifier),
         optional($.type_parameters),
         optional(field('parameters', $.parameters)),
-        optional(seq(':', field('parent', $._type), optional($.arguments))),
-        optional(seq('::', commaSep(field('implements', $._type)))),
+        optional(seq(':', $._parent, repeat(seq(',', $._parent)))),
+        optional(seq('::', commaSep($._implemented))),
         optional(field('body', $.struct_body)),
       ),
+
+    _parent: ($) => prec.right(seq(field('parent', $._type), optional($.arguments))),
+
+    _implemented: ($) => prec.right(seq(field('implements', $._type), optional($.arguments))),
 
     struct_body: ($) => prec.dynamic(3, seq('{', repeat(choice($._member, ';', ',')), '}')),
 
@@ -128,7 +132,7 @@ module.exports = grammar({
 
     _record_definition: ($) =>
       seq(
-        alias(choice('type', 'record', 'annotation'), $.definition_kind),
+        alias(choice('type', 'record', 'annotation', 'alias'), $.definition_kind),
         field('name', $.type_identifier),
         optional($.type_parameters),
         optional(choice(seq('=', field('value', $._type)), field('body', $.record_body))),
@@ -174,9 +178,20 @@ module.exports = grammar({
         $.break_statement,
         $.continue_statement,
         $.block,
+        $.unsafe_block,
+        $.asm_block,
         $.object_method,
         $._expression,
       ),
+
+    unsafe_block: ($) => prec(1, seq('unsafe', field('body', $.block))),
+
+    asm_block: ($) => seq('asm', '{', repeat(choice($.asm_section, $.asm_fallback)), '}'),
+    asm_section: ($) => seq(field('target', $.identifier), field('code', $.asm_code)),
+    asm_fallback: ($) => seq('else', field('body', $.block)),
+    asm_code: ($) => seq('{', repeat(choice($.asm_text, $.asm_operand, $.asm_code)), '}'),
+    asm_text: (_) => token(prec(-1, /[^{}]+/)),
+    asm_operand: (_) => token(seq('{', /[A-Za-z_][A-Za-z0-9_]*/, '}')),
 
     object_method: ($) =>
       prec.dynamic(
