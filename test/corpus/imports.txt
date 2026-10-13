@@ -1,0 +1,46 @@
+============================================================
+Import aliases and imports inside blocks
+============================================================
+
+import "std/memory" as Mem
+import (
+    "std/math" as M
+    "utils"
+)
+
+fun root(x: float): float {
+    import "std/math"
+    return sqrt(x)
+}
+
+------------------------------------------------------------
+
+(source_file
+  (import_declaration
+    (string
+      (string_content))
+    (import_alias
+      name: (identifier)))
+  (import_declaration
+    (string
+      (string_content))
+    (import_alias
+      name: (identifier))
+    (string
+      (string_content)))
+  (function_declaration
+    name: (identifier)
+    parameters: (parameters
+      (parameter
+        name: (identifier)
+        type: (type_identifier)))
+    return_type: (type_identifier)
+    body: (block
+      (import_declaration
+        (string
+          (string_content)))
+      (return_statement
+        (call_expression
+          function: (identifier)
+          arguments: (arguments
+            (identifier)))))))

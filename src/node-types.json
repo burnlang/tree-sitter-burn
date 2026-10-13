@@ -134,6 +134,10 @@
         "named": true
       },
       {
+        "type": "import_declaration",
+        "named": true
+      },
+      {
         "type": "object_method",
         "named": true
       },
@@ -1266,6 +1270,22 @@
     }
   },
   {
+    "type": "import_alias",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "import_declaration",
     "named": true,
     "fields": {},
@@ -1273,6 +1293,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "import_alias",
+          "named": true
+        },
         {
           "type": "string",
           "named": true
@@ -2114,10 +2138,6 @@
         },
         {
           "type": "function_declaration",
-          "named": true
-        },
-        {
-          "type": "import_declaration",
           "named": true
         }
       ]
