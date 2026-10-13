@@ -47,12 +47,15 @@ module.exports = grammar({
   rules: {
     source_file: ($) => repeat(choice($._item, ';')),
 
-    _item: ($) => choice($.import_declaration, $.function_declaration, $.definition, $._statement),
+    _item: ($) => choice($.function_declaration, $.definition, $._statement),
 
     line_comment: (_) => token(seq('//', /[^\n]*/)),
     block_comment: (_) => token(/\/\*([^*/]|\*+[^*/]|\/+[^*/]|\/\*([^*]|\*+[^*/])*\*+\/)*\*+\//),
 
-    import_declaration: ($) => seq('import', choice($.string, seq('(', repeat(seq($.string, optional(','))), ')'))),
+    import_declaration: ($) =>
+      seq('import', choice($._import_path, seq('(', repeat(seq($._import_path, optional(','))), ')'))),
+    _import_path: ($) => seq($.string, optional($.import_alias)),
+    import_alias: ($) => seq('as', field('name', $.identifier)),
 
     annotation: ($) => prec.right(seq('@', field('name', $.identifier), optional($.arguments))),
 
@@ -169,6 +172,7 @@ module.exports = grammar({
 
     _statement: ($) =>
       choice(
+        $.import_declaration,
         $.variable_declaration,
         $.typed_declaration,
         $.if_statement,
